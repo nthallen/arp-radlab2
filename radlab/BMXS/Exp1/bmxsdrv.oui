@@ -1,0 +1,18 @@
+<package> bmxsdrv
+<include> "bmxs_all.h"
+<include> msg msghdr
+<follow> msghdr
+
+<init> bmxsdrv_init(argc, argv);
+
+<opts> "N:H:"
+<sort>
+	-N <logging config>
+	-H <bmxs_hostname>	
+<unsort>
+<blank>
+Logging config is a path string identifying the last file previously written and implicitly the next file to write.
+
+<package> msghdr_default
+<var>
+  char *msg_hdr_default = "bmxsd";

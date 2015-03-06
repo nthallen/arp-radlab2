@@ -1,0 +1,24 @@
+TM typedef unsigned short UINT { text "%5u";}
+TM 4 hz UINT Synch, MFCtr;
+TM typedef unsigned char UCHAR { text "%3u";}
+TM 4 hz UCHAR bmxs_res;
+TM 4 hz UCHAR bmxs_state;
+TM 4 hz UINT bmxs_nc;
+TM 4 hz UINT bmxs_index;
+TM 4 hz UINT bmxs_stale;
+
+%{
+#include "BMXS.h"
+BMXS_t BMXS; 
+%}
+TM "Receive" BMXS 0;
+
+Group BMXS_group ( bmxs_res, bmxs_state, bmxs_nc, bmxs_index, bmxs_stale ) {
+	bmxs_res = BMXS.resolution;
+	
+	bmxs_state = BMXS.stat;
+
+	bmxs_nc = BMXS.numcoads;
+	bmxs_index = BMXS.index;
+	bmxs_stale = BMXS_obj->stale();
+}

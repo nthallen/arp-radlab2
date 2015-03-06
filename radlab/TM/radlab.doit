@@ -1,0 +1,4 @@
+display radlabdisp
+client radlabclt
+batchfile interact
+memo

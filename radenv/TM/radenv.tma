@@ -1,0 +1,53 @@
+%{
+  #include "swstat.h"
+  int req_acquire = 0;
+%}
+
+state Init {
+  > Telemetry Start
+  Validate Idle;
+}
+
+state Idle {
+  { if ( SWStat == SWS_ACQUIRE ) Validate Acquire; }
+}
+
+state Acquire {
+  +1 > Flipper On
+     > FlipState On
+  +1 > Flipper Off
+     Hold until ( SWStat == SWS_IDLE || SWStat == SWS_TIME_WARP ) or 7:30;
+     > Flipper On
+     > FlipState Off
+  +1 > Flipper Off
+     { if ( !req_acquire ) Validate Idle; }
+  +1 Hold until ( SWStat == SWS_IDLE || SWStat == SWS_TIME_WARP ) or 10:00;
+     { if ( req_acquire ) Validate Acquire;
+       else Validate Idle;
+     }
+}
+
+# -----------------------------------------------------------------------------
+# Partition 2: Software Status
+# -----------------------------------------------------------------------------
+Partition
+
+State SW_Stat_Wait NoLog {
+  { int reset_it;
+    reset_it = 1;
+    switch (SWStat) {
+      default:
+      case 0:   reset_it = 0; break;
+      case SWS_IDLE: req_acquire = 0; break;
+      case SWS_ACQUIRE: req_acquire = 1; break;
+      case SWS_TIME_WARP: break;
+    }
+    if (reset_it) Validate SW_Stat_Reset;
+  }
+}
+
+State SW_Stat_Reset NoLog {
+	> _SW Status Set 0
+	Hold until (SWStat == 0) or 10;
+	Validate SW_Stat_Wait;
+}

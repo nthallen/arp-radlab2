@@ -1,0 +1,23 @@
+%{
+  #include "specq.h"
+  specq_t SpecQ;
+  short int Coadds = 1;
+%}
+
+TM "Receive" SpecQ 0;
+TM "Receive" Coadds 0;
+
+TM typedef unsigned short USHRT { text "%5u"; }
+TM typedef unsigned char UCHAR { text "%3u"; }
+TM 1 Hz USHRT SQ_scan;
+TM 1 Hz USHRT SQ_status;
+TM 1 Hz UCHAR SQ_stale;
+
+group specq (SQ_scan, SQ_status, SQ_stale) {
+  SQ_scan = SpecQ.scannum;
+  SQ_status = SpecQ.status;
+  SQ_stale = SpecQ_obj->stale();
+}
+
+TM 1 Hz USHRT NCoadds; Collect NCoadds = Coadds;
+

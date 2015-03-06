@@ -1,0 +1,50 @@
+Indexer {
+  HBox { Title: -; "Turntable"; -; };
+  # Header: Step czbardoi Diagram Scan Kill;
+  (TTStep,5)  (TTDgrm,5) (TTScan,4) (TTKill,5); 
+}
+
+hart {
+  HBox { Title:-;  "Hart"; -; (Hart_stale,3) };
+  Header: ""   Age   Ohms;
+  "1:" (H1R_stale,3) (Hart1R,10);
+  "2:" (H2R_stale,3) (Hart2R,10);
+  "3:" (H3R_stale,3) (Hart3R,10);
+  "4:" (H4R_stale,3) (Hart4R,10);
+  "5:" (H5R_stale,3) (Hart5R,10);
+  "6:" (H6R_stale,3) (Hart6R,10);
+  "7:" (H7R_stale,3) (Hart7R,10);
+  "8:" (H8R_stale,3) (Hart8R,10);
+  "9:" (H9R_stale,3) (Hart9R,10);
+  "10:" (H10R_stale,3) (Hart10R,10);
+}
+
+bomem {
+  HBox { Title: +-;  "Bomem"; -; (SQ_stale,3) };
+  Status: (SQ_status,5);
+  Scan:   (SQ_scan,5);
+  NCoadds: (NCoadds,5);
+  Stale:  (SQ_stale,3);
+  -;
+  SWStat: (SWStat,5);
+}
+
+laser {
+  HBox { Title: +-;  "Laser"; -;  };
+  Status: (LaserS,3);
+  Power:  (LasPwr,5) V;
+  Temp: (QCLTV,5) V;
+  Flip: (FlipDgrm,5);
+}
+
+qcli {
+  HBox { Title: +-;  "QCL"; -;  };
+  CurrSet: (QCLISet,6);
+}
+
+{
+  [Indexer];
+  HBox { [hart]; |+; { [bomem]; [laser]; [qcli] } };
+  -;
+  >{ (flttime,8) (MFCtr,5) }
+}

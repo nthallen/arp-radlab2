@@ -1,0 +1,82 @@
+5
+  0x818, 0x0000
+  0x806, 0x0102
+  0x838, 0x0000
+  0x826, 0x0102
+  0x83A, 0x0001
+
+8
+  0x808, 0
+  0x811, 0
+  0x813, 0
+  0x80C, 0
+  0x828, 0
+  0x831, 0
+  0x833, 0
+  0x82C, 0
+
+64
+  SPARE,  0, 0x0001 ; 0: WBB1 H1 On
+  SPARE,  0, 0x0002 ; 1: WBB1 H1 Off
+  SPARE,  0, 0x0004 ; 2: WBB1 H2 On
+  SPARE,  0, 0x0008 ; 3: WBB1 H2 Off
+  SPARE,  0, 0x0010 ; 4: WBB2 H1 On
+  SPARE,  0, 0x0020 ; 5: WBB2 H1 Off
+  SPARE,  0, 0x0040 ; 6: BB2 TEC On
+  SPARE,  0, 0x0080 ; 7: BB2 TEC Off
+  SPARE,  1, 0x0100 ; 8: CBB BO Heat On
+  SPARE,  1, 0x0200 ; 9: CBB BO Heat Off
+  SPARE,  1, 0x0400 ; 10: Del 2
+  SPARE,  1, 0x0800 ; 11: Del 3
+  STRB,   1, 0x1000 ; 12: HeNe Pwr On
+  STRB,   1, 0x2000 ; 13: HeNe Pwr Off
+  SPARE,  1, 0x4000 ; 14: Pt Mr Ht On
+  SPARE,  1, 0x8000 ; 15: Pt Mr Ht Off
+  SPARE,  2, 0x0100 ; 16: Bk Win Ht On
+  SPARE,  2, 0x0200 ; 17: Bk Win Ht Off
+  SPARE,  2, 0x0400 ; 18: Wm Bx Ht 1 On
+  SPARE,  2, 0x0800 ; 19: Wm Bx Ht 1 Off
+  SPARE,  2, 0x1000 ; 20: Wm Bx Ht 2 On
+  SPARE,  2, 0x2000 ; 21: Wm Bx Ht 2 Off
+  SPARE,  2, 0xC000 ; 22: EXADDR 01
+  SPARE,  2, 0x8000 ; 23: EXADDR 1
+  SPARE,  3, 0x0003 ; 24: EXADDR 23
+  SPARE,  3, 0x0002 ; 25: EXADDR 3
+  SPARE,  3, 0x0004 ; 26: Bom Reset
+  SPARE,  3, 0x0008 ; 27: DCntrl 1
+  SPARE,  3, 0x0010 ; 28: DCntrl 2
+  SPARE,  3, 0x0020 ; 29: Fans On
+  SPARE,  3, 0x0040 ; 30: Fans Off
+  SPARE,  3, 0x0080 ; 31: Lab 1 On
+  SPARE,  4, 0x0001 ; 32: Lab 1 Off
+  SPARE,  4, 0x0002 ; 33: Lab 2 On
+  SPARE,  4, 0x0004 ; 34: Lab 2 Off
+  SPARE,  4, 0x0078 ; 35: EXDATA
+  SPARE,  4, 0x0010 ; 36: EXDATA 1
+  SPARE,  4, 0x0020 ; 37: EXDATA 2
+  SPARE,  4, 0x0040 ; 38: EXDATA 3
+  SPARE,  4, 0x0080 ; 39: EXENBL 0
+  SPARE,  5, 0x0100 ; 40: EXENBL 1
+  SPARE,  5, 0x0200 ; 41: EXENBL 2
+  SPARE,  5, 0x0400 ; 42: EXENBL 3
+  SPARE,  5, 0x1800 ; 43: Bom Sc Lgth
+  SPARE,  5, 0x1000 ; 44: Bom Sc Lgth 2
+  SPARE,  5, 0x2000 ; 45: Del 0
+  SPARE,  5, 0x4000 ; 46: Del 1
+  SPARE,  5, 0x8000 ; 47: Opt Plt Ht On
+  SPARE,  6, 0x0100 ; 48: DCntrl 3
+  SPARE,  6, 0x0200 ; 49: DCntrl 4
+  SPARE,  6, 0x0400 ; 50: Opt Plt Ht Off
+  SPARE,  6, 0x0800 ; 51: ~SPARE_4_ON
+  SPARE,  6, 0x1000 ; 52: ~SPARE_4_OFF
+  SPARE,  6, 0x2000 ; 53: ~SPARE_5_ON
+  SPARE,  6, 0x4000 ; 54: ~SPARE_5_OFF
+  SPARE,  6, 0x8000 ; 55: DCntrl 5
+  SPARE,  7, 0x0001 ; 56: Lab 28 1 On
+  SPARE,  7, 0x0002 ; 57: Lab 28 1 Off
+  SPARE,  7, 0x0004 ; 58: Lab 28 2 On
+  SPARE,  7, 0x0008 ; 59: Lab 28 2 Off
+  SPARE,  7, 0x0010 ; 60: Lab 28 3 On
+  SPARE,  7, 0x0020 ; 61: Lab 28 3 Off
+  SPARE,  7, 0x0040 ; 62: Lab 28 4 On
+  SPARE,  7, 0x0080 ; 63: Lab 28 4 Off

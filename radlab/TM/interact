@@ -1,0 +1,18 @@
+# Startup script for radlab
+
+  Launch memo memo -o radlab.log
+  Launch /dev/huarp/subbus subbusd_sc104 -i7
+  Launch TM/DCo TMbfr
+  memo=/dev/huarp/$Experiment/memo
+  echo "Running script interact" >$memo
+
+  Launch - lgr -N `mlf_find LOG`
+  Launch - dccc -f $TMBINDIR/dccc.dccc
+  Launch DG/cmd radlabcol
+  Launch cmd/server radlabsrvr
+  Launch - idx64 `cat $TMBINDIR/idx.idx64`
+  stty baud=9600 -ihflow -ohflow </dev/ser2
+  Launch - hartd -p /dev/ser2
+  Launch - specq -H 10.245.83.12
+  Launch - radlabalgo -v
+

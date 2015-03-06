@@ -1,0 +1,530 @@
+%{
+  #include "swstat.h"
+  #include "msg.h"
+  int scans_requested = 0;
+%}
+
+state init {
+     > telemetry start
+  +1 > CMDENBL On
+  +1 > Bomem SetCoadds 10
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+     Validate Idle;
+}
+
+state Idle {}
+
+state Acquire {
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # Calibration BB 2 
+ +5  > Drive Turntable to 27190 
+     Hold Until ( TTStep == 27190 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 4 
+  +1 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # OCEM cavity 1
+  +5 > Drive Turntable to 390 
+  +1 > Bomem SetCoadds 10 
+     Hold Until ( TTStep == 390 ) OR 90
+     else Validate DriveFailed;
+  +1 > drive flip in 1000
+  +1 > Bomem SetCoadds 10 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # Calibration BB 1 
+ +5  > Drive Turntable to 9205
+     Hold Until ( TTStep == 9205 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 4 
+  +1 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 2 
+ +5  > Drive Turntable to 13743
+     Hold Until ( TTStep == 13743 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > drive flip in 1000
+  +1 > Bomem SetCoadds 10 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 3 
+  +5  > Drive Turntable to 18217 
+     Hold Until ( TTStep == 18217) OR 90 
+     else Validate DriveFailed;
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 10 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # Calibration BB 2 
+ +5  > Drive Turntable to 27220 
+     Hold Until ( TTStep == 27220 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 4 
+  +1 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # Calibration BB 1 
+ +5  > Drive Turntable to 9195 
+     Hold Until ( TTStep == 9195) OR 90 
+     else Validate DriveFailed;
+
+  +1 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+
+}
+
+state Laser_Acquire {
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # Calibration BB 2 
+ +5  > Drive Turntable to 27190 
+     Hold Until ( TTStep == 27190 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 10
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # OCEM cavity 1
+  +5 > Drive Turntable to 390 
+  +1 > Bomem SetCoadds 10 
+     Hold Until ( TTStep == 390 ) OR 90
+     else Validate DriveFailed;
+  +1 > drive flip in 1000
+  +10 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # Calibration BB 1 
+ +5  > Drive Turntable to 9205
+     Hold Until ( TTStep == 9205 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 10 
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 2 
+ +5  > Drive Turntable to 13743
+     Hold Until ( TTStep == 13743 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > drive flip in 1000
+  +10 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 3 
+  +5  > Drive Turntable to 18217 
+     Hold Until ( TTStep == 18217) OR 90 
+     else Validate DriveFailed;
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 10 
+  +10 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # Calibration BB 2 
+ +5  > Drive Turntable to 27220 
+     Hold Until ( TTStep == 27220 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 10 
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # Calibration BB 1 
+ +5  > Drive Turntable to 9195 
+     Hold Until ( TTStep == 9195) OR 90 
+     else Validate DriveFailed;
+
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     Validate Idle;
+}
+
+
+state Cal1_Acquire {
+
+     # OCEM cavity 1
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+  +5 > Drive Turntable to 390 
+  +1 > Bomem SetCoadds 10 
+     Hold Until ( TTStep == 390 ) OR 90
+     else Validate DriveFailed;
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 2 
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+ +5  > Drive Turntable to 13733
+     Hold Until ( TTStep == 13733 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+
+     # OCEM cavity 3 
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+  +5  > Drive Turntable to 18197 
+     Hold Until ( TTStep == 18197) OR 90 
+     else Validate DriveFailed;
+
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     Validate Idle;
+}
+
+
+state Debug_Acquire {
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # Calibration BB 1 
+ +5  > Drive Turntable to 9195 
+     Hold Until ( TTStep == 9195 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 10 
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # Calibration BB 2 
+ +5  > Drive Turntable to 27200 
+     Hold Until ( TTStep == 27200 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 3 
+  +5 > Drive Turntable to 18192 
+     Hold Until ( TTStep == 18192 ) OR 90
+     else Validate DriveFailed;
+  +1 > drive flip in 1000
+  +10 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 2 
+ +5  > Drive Turntable to 13728
+     Hold Until ( TTStep == 13728 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 > drive flip in 1000
+  +1 > Bomem SetCoadds 10 
+  +10 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # OCEM cavity 1 
+  +5  > Drive Turntable to 395 
+     Hold Until ( TTStep == 395 ) OR 90 
+     else Validate DriveFailed;
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 10 
+  +10 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+  +1 > drive flip in 1000
+
+  +1 > Bomem SetCoadds 5 
+  +10 { scans_requested = 1; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+
+    # Initialize rotating table
+ +10 > Drive Turntable In 35000
+  +1 Hold Until ( TTStat & 1 ) OR 90
+     else Validate DriveFailed;
+  +1 > Drive Turntable Out 500
+  +2 depending on (TTStep once) {
+      msg( 0, "Zeroref at %d", 500-TTStep );
+     }
+  +1 > Drive Turntable To 0
+
+     # Calibration BB 1 
+ +5  > Drive Turntable to 9195 
+     Hold Until ( TTStep == 9195) OR 90 
+     else Validate DriveFailed;
+
+  +1 > Bomem SetCoadds 10 
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     # Calibration BB 2 
+ +5  > Drive Turntable to 27200 
+     Hold Until ( TTStep == 27200 ) OR 90 
+     else Validate DriveFailed;
+
+  +1 { scans_requested = 2; }
+     Hold Until Valid (Scan);
+     Hold Until Valid (Scan_Idle);
+
+     Validate Idle;
+}
+
+
+state DriveFailed {
+}
+
+state Shutdown {
+  { scans_requested = 0; }
+  Hold Until Valid (Scan_Idle);
+   +1 > Drive Turntable to 0
+      Hold Until ( TTStep == 0 ) OR 60;
+  +10 > Quit
+}
+
+Partition
+
+state Scan_Idle {
+  depending on (1 Hz) {
+    if (scans_requested) Validate Scan;
+  }
+}
+
+state Scan {
+  { if (scans_requested == 0) Validate Scan_Idle; }
+  +1 Hold Until ( SQ_status == 200 );
+     > Bomem Clear Status
+     Hold Until ( SQ_status == 0 );
+  +1 > Bomem Scan
+     Hold Until ( SQ_status != 0 );
+     Hold Until ( SQ_status != 202 );
+     { if ( SQ_status != 200 ) {
+	 msg( 2, "Expected Ready Status, saw %d", SQ_status );
+	 Validate Scan_Failed;
+       }
+     }
+     { if ( scans_requested > 0 ) {
+	 --scans_requested;
+	 Validate Scan;
+       } else Validate Scan_Idle;
+     }
+}
+
+state Scan_Failed {
+  depending on (Shutdown) { Validate Scan_Idle; }
+}
+
+Partition
+
+state Laser_Off {
+  > Laser Power Off
+}
+
+state Laser_On {
+    { if (convert(QCLTV) < .5 ) Validate Laser_Over_Temp; }
+  +1 > Laser Power On
+}
+
+state Laser_Over_Temp {
+  > Laser Power Off
+  { msg( 2, "Laser Over Temperature: %.1lf", convert(QCLTV) ); }
+  +2 Validate Shutdown;
+}
+
+
+Partition
+
+state SW_Stat_Wait NoLog {
+  { int reset_it;
+    reset_it = 1;
+    switch (SWStat) {
+      default:
+      case 0: reset_it = 0; break;
+      case SWS_ACQUIRE: Validate Acquire; break;
+      case SWS_LASER_ACQUIRE: Validate Laser_Acquire; break;
+      case SWS_CAL1_ACQUIRE: Validate Cal1_Acquire; break;
+      case SWS_DEBUG_ACQUIRE: Validate Debug_Acquire; break;
+      case SWS_IDLE: scans_requested = 0; Validate Idle; break;
+      case SWS_SHUTDOWN: Validate Shutdown; break;
+    }
+    if (reset_it) Validate SW_Stat_Reset;
+  }
+}
+
+state SW_Stat_Reset NoLog {
+  > _SW Status Set 0
+  Hold until (SWStat == 0) or 10;
+  Validate SW_Stat_Wait;
+}
+

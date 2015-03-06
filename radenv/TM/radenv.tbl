@@ -1,0 +1,45 @@
+Agilent {
+  HBox { Title: -; Agilent; - };
+  QCLAT: (QCLAT,15) Ohms;
+  VTBBT1: (VTBBT1,15) Ohms;
+  VTBBT2: (VTBBT2,15) Ohms;
+  LASPM: (LASPM,15) V;
+  QCPTA: (QCPTA,15) V;
+  QCLIA: (QCLIA,15) V;
+  QCLPS: (QCLPS,15) V;
+  AMBPS: (AMBPS,15) V;
+  TECIA: (TECIA,15) V;
+  {Stale: (AgStale,3)};
+}
+bmxs {
+  HBox { Title: +-; BMXS; -+ };
+  Fnum: (bmxs_index, 5);
+  Status: (bmxs_state, 3);
+  Res: (bmxs_res, 3);
+  NC: (bmxs_nc, 5);
+  Stale: (bmxs_stale, 5);
+}
+Flipper {
+  HBox { Title: +-; Flipper; -+ };
+  Command: (FlipS,3);
+  FlipState: (FlipState,5);
+}
+Chamber {
+  HBox { Title: -; Chamber; - };
+  P: (ChamberP,15) Torr;
+}
+SW {
+  +-+;
+  SWStat: (SWStat,5);
+  Time: (flttime,8);
+  MFCtr: (MFCtr,5);
+}
+{ [Agilent];
+  [Chamber];
+  HBox {
+    [bmxs]; |+; {
+      [Flipper];
+      [SW];
+    }
+  }
+}

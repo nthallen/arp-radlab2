@@ -1,0 +1,81 @@
+%{
+  #include "nortlib.h"
+  static FILE *rlfp;
+
+  extern "C" {
+    void radlabext_init(void) {
+      rlfp = fopen( "radlab.csv", "w" );
+      if ( rlfp == NULL )
+	nl_error( 3, "Cannot write to radlab.csv" );
+      fprintf( rlfp,
+	"Time,"
+	"Hart1R,"
+	"Hart2R,"
+	"Hart3R,"
+	"Hart4R,"
+	"Hart5R,"
+	"Hart6R,"
+	"Hart7R,"
+	"Hart8R,"
+	"Hart9R,"
+	"Hart10R,"
+	"H1R_stale,"
+	"H2R_stale,"
+	"H3R_stale,"
+	"H4R_stale,"
+	"H5R_stale,"
+	"H6R_stale,"
+	"H7R_stale,"
+	"H8R_stale,"
+	"H9R_stale,"
+	"H10R_stale,"
+	"Hart_stale,"
+	"TTStep,"
+	"TTStat,"
+	"IXStt,"
+	"SQ_scan,"
+	"SQ_status,"
+	"SQ_stale,"
+	"NCoadds,"
+	"LaserS,"
+        "LasPwr,"
+	"QCLTV,"
+	"SWStat\n" );
+    }
+  }
+%}
+
+{ fprintf( rlfp, "%d,", flttime );
+  fprintf( rlfp, "%s,", text(Hart1R) );
+  fprintf( rlfp, "%s,", text(Hart2R) );
+  fprintf( rlfp, "%s,", text(Hart3R) );
+  fprintf( rlfp, "%s,", text(Hart4R) );
+  fprintf( rlfp, "%s,", text(Hart5R) );
+  fprintf( rlfp, "%s,", text(Hart6R) );
+  fprintf( rlfp, "%s,", text(Hart7R) );
+  fprintf( rlfp, "%s,", text(Hart8R) );
+  fprintf( rlfp, "%s,", text(Hart9R) );
+  fprintf( rlfp, "%s,", text(Hart10R) );
+  fprintf( rlfp, "%s,", text(H1R_stale) );
+  fprintf( rlfp, "%s,", text(H2R_stale) );
+  fprintf( rlfp, "%s,", text(H3R_stale) );
+  fprintf( rlfp, "%s,", text(H4R_stale) );
+  fprintf( rlfp, "%s,", text(H5R_stale) );
+  fprintf( rlfp, "%s,", text(H6R_stale) );
+  fprintf( rlfp, "%s,", text(H7R_stale) );
+  fprintf( rlfp, "%s,", text(H8R_stale) );
+  fprintf( rlfp, "%s,", text(H9R_stale) );
+  fprintf( rlfp, "%s,", text(H10R_stale) );
+  fprintf( rlfp, "%s,", text(Hart_stale) );
+  fprintf( rlfp, "%s,", text(TTStep) );
+  fprintf( rlfp, "%s,", text(TTStat) );
+  fprintf( rlfp, "%s,", text(IXStt) );
+  fprintf( rlfp, "%s,", text(SQ_scan) );
+  fprintf( rlfp, "%s,", text(SQ_status) );
+  fprintf( rlfp, "%s,", text(SQ_stale) );
+  fprintf( rlfp, "%s,", text(NCoadds) );
+  fprintf( rlfp, "%d,", LaserS );
+  fprintf( rlfp, "%s,", text(LasPwr) );
+  fprintf( rlfp, "%s,", text(QCLTV) );
+  fprintf( rlfp, "%s\n", text(SWStat) );
+}

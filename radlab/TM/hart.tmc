@@ -1,0 +1,77 @@
+/* hart.tmc */
+%{
+  #include "hartd.h"
+
+  hartd_t Hart;
+
+  class hart_channel {
+    private:
+      int age;
+    public:
+      double value;
+      inline hart_channel() { age = 255; }
+      unsigned char get_age();
+      void set( double value, int age );
+  };
+  unsigned char hart_channel::get_age() {
+    return age < 255 ? age++ : 255;
+  }
+  void hart_channel::set( double value_in, int age_in ) {
+    age = age_in;
+    value = value_in;
+  }
+
+  hart_channel HartCh[11];
+
+  static void update_hart(int stale) {
+    if (Hart.chan > 0 && Hart.chan <= 10 ) {
+      HartCh[Hart.chan].set(Hart.value, stale);
+    }
+  }
+  inline double hart_value(int i) { return HartCh[i].value; }
+  inline int hart_age(int i) { return HartCh[i].get_age(); }
+%}
+
+TM "Receive" Hart 0;
+TM typedef double HartR { text "%10.3lf"; }
+TM 1 Hz HartR Hart1R;
+TM 1 Hz HartR Hart2R;
+TM 1 Hz HartR Hart3R;
+TM 1 Hz HartR Hart4R;
+TM 1 Hz HartR Hart5R;
+TM 1 Hz HartR Hart6R;
+TM 1 Hz HartR Hart7R;
+TM 1 Hz HartR Hart8R;
+TM 1 Hz HartR Hart9R;
+TM 1 Hz HartR Hart10R;
+TM typedef unsigned char stale_t { text "%3d"; }
+TM 1 Hz stale_t H1R_stale;
+TM 1 Hz stale_t H2R_stale;
+TM 1 Hz stale_t H3R_stale;
+TM 1 Hz stale_t H4R_stale;
+TM 1 Hz stale_t H5R_stale;
+TM 1 Hz stale_t H6R_stale;
+TM 1 Hz stale_t H7R_stale;
+TM 1 Hz stale_t H8R_stale;
+TM 1 Hz stale_t H9R_stale;
+TM 1 Hz stale_t H10R_stale;
+TM 1 Hz stale_t Hart_stale;
+group Hart ( Hart1R, Hart2R, Hart3R, Hart4R, Hart5R,
+     Hart6R, Hart7R, Hart8R, Hart9R, Hart10R,
+     H1R_stale, H2R_stale, H3R_stale, H4R_stale, H5R_stale,
+     H6R_stale, H7R_stale, H8R_stale, H9R_stale, H10R_stale,
+     Hart_stale ) {
+  Hart_stale = Hart_obj->stale();
+  update_hart(Hart_stale);
+  Hart1R = hart_value(1); H1R_stale = hart_age(1);
+  Hart2R = hart_value(2); H2R_stale = hart_age(2);
+  Hart3R = hart_value(3); H3R_stale = hart_age(3);
+  Hart4R = hart_value(4); H4R_stale = hart_age(4);
+  Hart5R = hart_value(5); H5R_stale = hart_age(5);
+  Hart6R = hart_value(6); H6R_stale = hart_age(6);
+  Hart7R = hart_value(7); H7R_stale = hart_age(7);
+  Hart8R = hart_value(8); H8R_stale = hart_age(8);
+  Hart9R = hart_value(9); H9R_stale = hart_age(9);
+  Hart10R = hart_value(10); H10R_stale = hart_age(10);
+}
+

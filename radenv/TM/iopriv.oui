@@ -1,0 +1,9 @@
+<package> iopriv
+<include> <sys/neutrino.h>
+<include> <errno.h>
+<include> <string.h>
+<include> msg
+<follow> msg
+<init>
+  if (ThreadCtl(_NTO_TCTL_IO,0) == -1 )
+    nl_error( 3, "Error requesting I/O priveleges: %s", strerror(errno) );

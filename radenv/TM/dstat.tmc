@@ -1,0 +1,7 @@
+%{
+  const char *on_off_text[] = { "off", " on" };
+%}
+TM typedef unsigned char StBit { text "%3d" on_off_text[]; }
+
+StBit FlipS; invalidate FlipS; { FlipS = CmdStat & 0x1; Validate FlipS; }
+

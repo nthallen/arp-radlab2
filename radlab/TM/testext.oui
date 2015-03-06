@@ -1,0 +1,12 @@
+<package> testext
+<include> msg dc
+<follow> msg
+<defs>
+  extern void testext_init(void);
+<init>
+  testext_init();
+
+<package> msghdr_default
+<var>
+  char *msg_hdr_default = "Ext";
+

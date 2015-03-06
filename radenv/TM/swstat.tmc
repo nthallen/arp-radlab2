@@ -1,0 +1,5 @@
+%{
+  /* swstat.tmc */
+  #include "swstat.h"
+  swstat_t SWData;
+%}

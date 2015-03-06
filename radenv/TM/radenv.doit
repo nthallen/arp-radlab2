@@ -1,0 +1,5 @@
+batchfile interact
+display radenvdisp -C $FlightNode
+client radenvclt
+memo
+phrtg

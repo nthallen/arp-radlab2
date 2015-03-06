@@ -1,0 +1,4 @@
+<package> herc_ad
+<include> "herc_ad.h"
+<preceed> seteuid
+<init> init_herc_ad();

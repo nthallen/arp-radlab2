@@ -1,0 +1,12 @@
+bmxs {
+	Fnum: (bmxs_index, 5);
+	Status: (bmxs_state, 3);
+	Res: (bmxs_res, 3);
+	NC: (bmxs_nc, 5);
+	Stale: (bmxs_stale, 3);
+}
+
+{ [bmxs];
+	-;
+	>{ (flttime,8) (MFCtr,5) }
+}

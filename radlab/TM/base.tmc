@@ -1,0 +1,48 @@
+TM typedef unsigned short UINT { text "%5u"; }
+TM 4 Hz UINT MFCtr, Synch;
+
+TM typedef double VOLTS { text "%6.4lf"; }
+TM typedef unsigned short AD12 {
+  collect x = sbrwa(x.address) & 0x0FFF;
+  convert VOLTS;
+  text "%5.3lf";
+}
+Calibration ( AD12, VOLTS ) {
+  0, 0,
+  4096, 4.096
+}
+
+TM typedef signed short AD12BP {
+  collect x { signed short v;
+    v = sbrwa(x.address) & 0x0FFF;
+    x = (v >= 4096) ? (v | 0xF000) : v; 
+  }
+  convert VOLTS;
+  text "%5.2lf";
+}
+Calibration ( AD12BP, VOLTS ) {
+  0, 0,
+  4096, 41
+}
+
+TM 1 Hz AD12 QCLTV; Address QCLTV 0xCC0;
+TM 1 Hz AD12BP LasPwr; Address LasPwr 0xC9E;
+
+TM typedef unsigned char DStat {
+  collect x = sbrba(x.address);
+  text "%08b";
+}
+TM 1 Hz DStat DS80A; Address DS80A 0x80A;
+
+TM typedef unsigned short DASetPt {
+  collect x = sbrwa(x.address);
+  convert VOLTS;
+  text "%6.3lf";
+}
+Calibration ( DASetPt, VOLTS ) {
+  0, 0,
+  4096, 10.000
+}
+
+TM 1 Hz DASetPt QCLISet; Address QCLISet 0xC60;
+

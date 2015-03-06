@@ -1,0 +1,5 @@
+display bmxsdiagdisp
+client bmxsclt
+memo
+batchfile interact
+phrtg

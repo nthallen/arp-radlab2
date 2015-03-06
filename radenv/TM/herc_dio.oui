@@ -1,0 +1,5 @@
+<package> herc_dio
+<include> "herc_ad.h"
+<include> iopriv
+<follow> iopriv
+<init> init_herc_dio();

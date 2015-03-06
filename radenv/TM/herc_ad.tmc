@@ -1,0 +1,37 @@
+%{
+  #include <math.h>
+  #include "herc_ad.h"
+  #ifndef M_LN10
+    #define M_LN10 2.30258509299404568402
+  #endif
+%}
+
+TM typedef signed short HERC_AD;
+TM typedef double TORR { text "%15.8le" agilent_text(); }
+TM typedef double VOLTS;
+
+TM typedef HERC_AD IONIVAC_ITR90 {
+  convert TORR ITR90_to_TORR();
+  text "%+15.8le" ITR90_text();
+}
+%{
+  extern TORR ITR90_to_TORR(IONIVAC_ITR90 ct);
+  extern const char *ITR90_text(IONIVAC_ITR90);
+  TORR ITR90_to_TORR(IONIVAC_ITR90 ct) {
+    double X;
+    TORR P;
+    X = (M_LN10*12./65536.)*(ct + 32768.) - M_LN10*9;
+    P = exp(X)*760./1013.25;
+    return P;
+  }
+  const char *ITR90_text(IONIVAC_ITR90 ct) {
+    return agilent_text(ITR90_to_TORR(ct));
+  }
+%}
+TM 1 Hz IONIVAC_ITR90 ChamberP; Address ChamberP 0; /* Chamber Pressure  */
+
+Group Herc_AD_Group ( ChamberP ) {
+  unsigned short cvals[32];
+  read_herc_ad( cvals );
+  ChamberP = cvals[ChamberP.address];
+}

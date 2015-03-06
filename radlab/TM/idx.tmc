@@ -1,0 +1,12 @@
+TM typedef unsigned short IndxrPos {
+  text "%5d";
+  collect x = sbrwa(x.address);
+}
+TM typedef unsigned char IndxrStat {
+  text "%08b";
+  collect x = sbrba(x.address);
+}
+TM 4 Hz IndxrPos  TTStep;  Address TTStep 0xA34;
+TM 4 Hz IndxrStat TTStat;  Address TTStat 0xA36;
+TM 4 Hz IndxrStat FlipStat;  Address FlipStat 0xA56;
+TM 4 Hz IndxrPos  IXStt;

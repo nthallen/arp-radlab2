@@ -1,0 +1,97 @@
+%{
+  #include <hw/inout.h>
+  #include "herc_ad.h"
+  #include "agilent.h"
+  #include <sstream>
+  #include <iomanip>
+
+  class agostream {
+    public:
+      agostream();
+      const char *str(double val);
+      static agostream agos;
+    private:
+      std::ostringstream os;
+  };
+  agostream::agostream() {
+    os << std::showpos << std::scientific << std::uppercase
+      << std::setprecision(8);
+  }
+  const char *agostream::str(double val) {
+    os.str("");
+    os << val;
+    return os.str().c_str();
+  }
+  agostream agostream::agos;
+
+  const char *agilent_text(double val) {
+    return agostream::agos.str(val);
+  }
+%}
+
+TM typedef double Agilent_t { text "%+15.8le" agilent_text(); }
+TM typedef Agilent_t RESISTANCE;
+TM typedef Agilent_t VOLTAGE;
+TM typedef unsigned short UINT { text "%5u"; }
+TM typedef unsigned char UCHAR { text "%3u"; }
+TM typedef unsigned char DStat { text "%08b"; }
+
+/* Agilent Data */
+TM 1 Hz RESISTANCE QCLAT; /* QCL Ambient Temperature */
+TM 1 Hz RESISTANCE VTBBT1; /* Vacuum Test Blackbody Temp 1 */
+TM 1 Hz RESISTANCE VTBBT2; /* Vacuum Test Blackbody Temp 2 */
+TM 1 Hz VOLTAGE LASPM; /* Laser Power Meter */
+TM 1 Hz VOLTAGE QCPTA; /* QCL Cold Plate Temperature, Actual */
+TM 1 Hz VOLTAGE QCLIA; /* QCL Current, Actual */
+TM 1 Hz VOLTAGE QCLPS; /* QCL Pressure Sensor */
+TM 1 Hz VOLTAGE AMBPS; /* Ambient Pressure Sensor */
+TM 1 Hz VOLTAGE TECIA; /* TEC Current Monitor */
+TM 1 Hz UCHAR AgStale;
+TM "Receive" Agilent 1;
+
+Group Agilent_Group (QCLAT, VTBBT1, VTBBT2, LASPM,
+	  QCPTA, QCLIA, QCLPS, AMBPS, AgStale) {
+  QCLAT = Agilent.data[0];
+  VTBBT1 = Agilent.data[1];
+  VTBBT2 = Agilent.data[2];
+  LASPM = Agilent.data[3];
+  QCPTA = Agilent.data[4];
+  QCLIA = Agilent.data[5];
+  QCLPS = Agilent.data[6];
+  AMBPS = Agilent.data[7];
+  TECIA = Agilent.data[8];
+  AgStale = Agilent_obj->stale(255);
+  if ( AgStale == 0 && Agilent.count != 9 && Agilent.count != 0) {
+    nl_error( 2, "Incorrect count %d from agilentDriver",
+	      Agilent.count );
+  }
+  Agilent_obj->synch();
+}
+
+TM 1 Hz DStat CmdStat;
+Collect CmdStat = in8(HERCULES_BASE_ADDR+16);
+
+TM "Receive" SWData 0;
+TM 1 Hz UINT SWStat; collect SWStat = SWData.SWStat;
+TM 1 Hz UINT FlipState; collect FlipState = SWData.FlipState;
+
+TM 4 hz UCHAR bmxs_res;
+TM 4 hz UCHAR bmxs_state;
+TM 4 hz UINT bmxs_nc;
+TM 4 hz UINT bmxs_index;
+TM 4 hz UINT bmxs_stale;
+
+%{
+  #include "BMXS.h"
+  extern BMXS_t BMXS;
+%}
+TM "Receive" BMXS 0;
+
+Group BMXS_group ( bmxs_res, bmxs_state, bmxs_nc, bmxs_index, bmxs_stale ) {
+  bmxs_res = BMXS.resolution;
+  bmxs_state = BMXS.stat;
+  bmxs_nc = BMXS.numcoads;
+  bmxs_index = BMXS.index;
+  bmxs_stale = BMXS_obj->stale();
+}
+TM 4 Hz UINT Synch, MFCtr;

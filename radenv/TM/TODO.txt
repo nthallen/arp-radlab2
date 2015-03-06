@@ -1,0 +1,33 @@
+  radenv
+    Agilent
+      1 2-wire thermistor resistance measurement
+      2 4-wire thermistor resistance measurements
+      1 voltage measurement from pressure transducer
+    Hercules
+      1 digital command
+    Bomem Interferometer
+
++ base.tmc
+    Define types, collection
++ agilent.h (probably copied from agilent directory)
+    Struct for telemetry
++ radenv.cmd
+    Include code for Hercules commands
++ radenv.tbl
+    Display of stuff
+  radenv.tma
+    Telemetry Start
+  interact
+
++ radenv.doit
+
+  radenv.edf
+    Extraction
+
++ radenv.spec
++ Experiment.config
++ VERSION
+
++ herc_dio.c
++ herc_dio.oui
++ herc_ad.h

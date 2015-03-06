@@ -1,0 +1,20 @@
+%{
+  #include "nortlib.h"
+  static FILE *rlfp;
+
+  extern "C" {
+    void testext_init(void) {
+      rlfp = fopen( "testext.csv", "w" );
+      if ( rlfp == NULL )
+	nl_error( 3, "Cannot write to testext.csv" );
+      fprintf( rlfp,
+	"Time,"
+	"QCLTVhex, QCLTV\n" );
+    }
+  }
+%}
+
+{ fprintf( rlfp, "%d,", flttime );
+  fprintf( rlfp, "%04x,", QCLTV );
+  fprintf( rlfp, "%s\n", text(QCLTV) );
+}

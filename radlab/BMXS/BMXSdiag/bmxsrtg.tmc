@@ -1,0 +1,8 @@
+%{
+	UINT last_BMXS = 0;
+%}
+
+if (last_BMXS != bmxs_index){
+	ci_sendfcmd(2, "PhRTG File BMXS %u\n", bmxs_index );
+	last_BMXS = bmxs_index;
+}

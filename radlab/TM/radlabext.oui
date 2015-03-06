@@ -1,0 +1,12 @@
+<package> radlabext
+<include> msg dc
+<follow> msg
+<defs>
+  extern void radlabext_init(void);
+<init>
+  radlabext_init();
+
+<package> msghdr_default
+<var>
+  char *msg_hdr_default = "Ext";
+

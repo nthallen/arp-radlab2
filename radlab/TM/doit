@@ -1,0 +1,417 @@
+#! /bin/ksh
+#ifdef __USAGE
+#%C [options]
+#  Starts Instrument operation
+#%C [options] stop
+#  Send Quit command to running system
+#%C [options] not
+#  Shuts down any straggling processes after system has stopped
+#%C [options] wait
+#  Does not interact with instrument until it is up and operating
+#
+#options:
+#	-s use screen for text-mode data display
+#	-a use ASCII chars for line-drawing
+#	-n use photon pterms for text-mode data display
+#	-p <run> play back <run>
+#	-S <session> specify the session (used internally)
+#endif
+
+umask 2
+. ./Experiment.config
+[ -z "$Experiment" ] && Experiment=none
+export Experiment
+
+function nl_error {
+  echo doit: $* >&2
+  exit 1
+}
+
+[ -n "$HomeDir" ] ||
+  nl_error "HomeDir undefined in Experiment.config"
+[ -z "$CltHomeDir" ] && CltHomeDir=$HomeDir
+dir=$PWD
+nnd=${dir%$CltHomeDir}
+[ "$dir" = "$nnd" ] &&
+  nl_error "Not in CltHomeDir $CltHomeDir"
+if [ -n "$nnd" ]; then
+  nd=${nnd#/net/}
+  [ "$nd" = "$nnd" ] &&
+    nl_error "Not in CltHomeDir $CltHomeDir (2)"
+  [ "$nd" = "${nd#*/}" ] ||
+    nl_error "Not in CltHomeDir $CltHomeDir (3)"
+fi
+
+# Parse options to select
+#   srcmode as one of realtime, InetIn or playback
+#   dispmode as one of screen, pterm or photon
+session=$$
+ncopts=''
+while getopts "ai:p:S:sn" opt; do
+  case $opt in
+    a) ncopts='-a';;
+    i) srcmode=InetIn; InetSrc=$OPTARG;;
+    p) srcmode=playback; Run=$OPTARG;;
+    s) dispmode=screen; dispmodescreen=1;;
+    S) session=$OPTARG;;
+    n) dispmode=pterm; dispmodepterm=1;;
+    \?) exit 1;; # getopts reports the error
+    :) exit 1;; # getopts reports the error
+  esac
+done
+if [ -n "$srcmode" ]; then
+  [ -n "$InetSrc" -a -n "$Run" ] &&
+    nl_error "Cannot specify both -i and -p"
+else
+  srcmode=realtime
+fi
+if [ -n "$dispmode" ]; then
+  [ -n "$dispmodescreen" -a -n "$dispmodepterm" ] &&
+    nl_error "Cannot specify both -s and -n"
+else
+  dispmode=photon
+  dispmodephoton=1
+fi
+
+let sval=$OPTIND-1
+shift $sval
+option=${1:-start}
+
+if [ $srcmode = realtime -a -n "$FlightNode" ]; then
+  FltNd=/net/$FlightNode
+else
+  FlightNode=`hostname`
+  FltNd=""
+fi
+
+case $dispmode in
+  screen) nc=nc; ncopt=$ncopts;;
+  pterm) nc=nc; ncopt=$ncopts;;
+  photon) nc='';;
+  *) nl_error "Unknown dispmode: '$dispmode'";;
+esac
+logfileroot=$Experiment
+logfilesuffix=.log
+[ $srcmode = realtime ] || logfilesuffix=.PB.$session.log
+interacts='radlabdisp radlabclt';
+batchfile=interact
+
+check_path=no
+startup=no
+case $option in
+  start) startup=yes; check_path=yes;;
+  stop);;
+  not) startup=yes; batchfile=/dev/null;;
+  wait) check_path=yes;;
+  screen);;
+  *) nl_error "Invalid option: '$option'";;
+esac
+
+[ $startup = yes -a -n "$batchfile" -a -z "$SCRIPT_OVERRIDE" ] &&
+  nl_error Cannot inhibit or alter startup without SCRIPT_OVERRIDE
+
+# Determine the path. Strictly speaking, this does
+# not have to happen before start, but I'd like
+# to check that the required applications exist
+if [ $check_path = yes ]; then
+  VERSION=1.0
+  case $srcmode in
+    playback)
+      # Need to find the data
+      ddir=$Run
+      if [ ! -d $ddir ]; then
+        for base in . $FltNd$HomeDir; do
+          ddir=$base/$Run
+          [ -d $ddir ] && break
+          ddir=$base/raw/$Run
+          [ -d $ddir ] && break
+          for runtype in flight cal data junk; do
+            ddir=$base/raw/$runtype/$Run
+            [ -d $ddir ] && break
+          done
+          [ -d $ddir ] && break
+        done
+      fi
+      [ -d $ddir ] || nl_error "Unable to locate run $Run"
+      [ -f $ddir/VERSION ] && VERSION=`cat $ddir/VERSION`;;
+    *)
+      ddir=$FltNd$HomeDir
+      [ -f VERSION ] && VERSION=`cat VERSION`;;
+  esac
+
+  TMBINDIR=$PWD/bin/$VERSION
+  [ -d $TMBINDIR ] ||
+    nl_error "Unable to locate bin dir for VERSION $VERSION"
+  export PATH=$TMBINDIR:$PATH
+
+  missing=''
+  for app in $interacts; do
+    [ -x $TMBINDIR/$app$nc ] || missing="$missing $app$nc"
+  done
+  [ -n "$missing" ] &&
+    nl_error "Unable to locate required application(s):$missing"
+fi
+
+function Launch {
+  name=$1
+  shift
+  [ -n "$launch_error" ] && return 1
+  if { $* & }; then
+    Launch_pid=$!
+    echo "Launch: $Launch_pid $*"
+    if [ "$name" != "-" ]; then
+      [ "${name#/}" = "$name" ] && name="/dev/huarp/$Experiment/$name"
+      waitfor $name 10 || {
+        echo "Launch namewait failure: $*" >&2
+        launch_error=yes
+        return 1
+      }
+    fi
+  else
+    echo "Launch Error: $*" >&2
+    launch_error=yes
+    return 1
+  fi
+  return 0
+}
+
+if [ $srcmode = realtime ]; then
+  # SCRIPT_OVERRIDE is the name of a file that will
+  # contain the name of the flight script and will
+  # be read by flight.sh. Setting it to /dev/null
+  # means we can write to it and it won't have any
+  # effect.
+  # [ -z "$SCRIPT_OVERRIDE" ] && SCRIPT_OVERRIDE=/dev/null
+  cmdsrvr=$FltNd/dev/huarp/$Experiment/cmd/server 
+  logfile=$FltNd$HomeDir/$logfileroot$logfilesuffix
+else  # not realtime
+  RemEx=$Experiment
+  Experiment=$RemEx.PB.$session
+  cmdsrvr=/dev/huarp/$Experiment/cmd/server
+  logfile=$logfileroot$logfilesuffix
+fi
+
+# override:
+#   no: We don't need to override
+#   req: Override is required
+#   done: Override has been requested
+typeset override=no
+[ $startup = yes -a $srcmode = realtime -a -n "$batchfile" ] &&
+  override=req
+if [ $override = req -a -d `dirname $SCRIPT_OVERRIDE` ]; then
+  echo $batchfile >$SCRIPT_OVERRIDE
+  override=done
+fi
+
+if [ ! -d $FltNd/ ]; then
+  echo "Waiting for Flight Node $FlightNode"
+  while [ ! -d $FltNd/ ]; do
+    waitfor $FltNd/ 2>/dev/null
+  done
+fi
+[ -n "$FltNd" ] && echo "Node $FlightNode is on the network"
+
+if [ $override = req ]; then
+  if [ -d `dirname $SCRIPT_OVERRIDE` ]; then
+    echo $batchfile >$SCRIPT_OVERRIDE
+    override=done
+  else
+    nl_error "SCRIPT_OVERRIDE path not found: '$SCRIPT_OVERRIDE'"
+  fi
+fi
+
+typeset waiting=no
+typeset signaled=no
+typeset fltshstarted=no
+while true; do
+  typeset see_parent=no
+  # np < 2 means parent is not running
+  ppid=`pidin -n $FlightNode -p parent -fa 2>/dev/null | grep -v pid`
+  [ -n "$ppid" ] && see_parent=yes
+  if [ $see_parent = yes -o -z "$FltNd" ]; then
+    if [ ! -e $cmdsrvr ]; then
+      if [ $see_parent = yes ]; then
+        if [ $override = done -a ! -f $SCRIPT_OVERRIDE ]; then
+          if [ $option = not ]; then
+            exit 0
+          else
+            nl_error "Override observed but startup apparently failed"
+          fi
+        fi
+        [ $override = auto ] &&
+          nl_error "Default startup apparently failed"
+        if [ $signaled = yes ]; then
+          echo "ppid = '$ppid' cmdsrvr = '$cmdsrvr'"
+          nl_error "Parent w/o cmdsrvr after signaling"
+        fi
+      fi
+      if [ $startup = yes ]; then
+        [ $override = no ] && override=auto
+        if [ $see_parent = yes ]; then
+          # echo signaling parent
+          sudo /usr/local/sbin/signal_parent $FlightNode
+          signaled=yes
+          oppid=$ppid
+          ppid=`pidin -n $FlightNode -p parent -fa 2>/dev/null | grep -v pid`
+          nw=1
+          while [ -n "$ppid" -a "$ppid" = "$oppid" ]; do
+            [ $nw -ge 3 ] &&
+              nl_error Signaling parent failed
+            sleep 1
+            ppid=`pidin -n $FlightNode -p parent -fa 2>/dev/null | grep -v pid`
+            let nw=nw+1
+          done
+          [ -z "$FltNd" -a $option = not ] && exit 0
+        elif [ $srcmode = realtime ]; then
+          if [ $fltshstarted = no ]; then
+            if [ $dispmode = screen ]; then
+              echo "Starting flight.sh on /dev/con1"
+              on -t /dev/con1 /usr/local/sbin/flight.sh &
+            else
+              tty=`tty`
+              echo "Starting flight.sh in a pterm"
+              on -t $tty pterm /usr/local/sbin/flight.sh &
+            fi
+            fltshstarted=yes
+          fi
+        else
+          Launch memo memo -o $logfile 
+          Launch TM/DCo TMbfr
+          if [ $srcmode = playback ]; then
+            Launch DG/cmd rdr -P $ddir -a
+          elif [ $srcmode = InetIn ]; then
+            Launch DG/cmd InetIn
+          fi
+          Launch cmd/server playbacksrvr
+          if [ -n "$launch_error" ]; then
+            echo "Launch failed: cleaning up"
+            exec parent -qt1
+          fi
+        fi
+      elif [ $option = stop ]; then
+        nl_error "Could not locate $Experiment's command server"
+      fi
+    fi
+  fi
+
+  if [ -e $cmdsrvr ]; then
+    case $option in
+      not)
+        nl_error "Instrument is in operation: quit first";;
+      stop)
+        echo "Quit" >$cmdsrvr
+        exit 0;;
+      start) break;;
+      wait) break;;
+      screen) break;;
+      *) nl_error "Unrecognized option '$option'";;
+    esac
+  fi
+
+  if [ $waiting = no ]; then
+    echo "Waiting for parent or command server on node $FlightNode"
+    waiting=yes
+  fi
+  sleep 1
+done
+
+if [ $override = done -a -f $SCRIPT_OVERRIDE ]; then
+  echo "Override script '$batchfile' not honored, removing"
+  rm -f $SCRIPT_OVERRIDE
+fi
+[ -f $logfile ] || touch $logfile
+
+# allocate consoles as necessary
+case $dispmode in
+  screen)
+    if [ $option != screen ]; then
+      rc=screenrc.$session
+      { echo startup_message off
+        echo split
+	echo focus
+	echo resize 2
+	echo focus
+        if [ -r $logfile ]; then
+          echo "screen -t $logfileroot$logfilesuffix /bin/sh -c \"echo \$\$ >less.pid.$session; exec less +F $logfile\""
+        fi
+        echo screen -t radlab /usr/local/sbin/getcon scr1 $session
+        echo width -w 35
+        #echo height -w 19
+	echo focus
+	echo screen -t clt /usr/local/sbin/getcon clt $session
+	echo height -w 2
+	echo width -w 80
+	echo focus
+        pbarg=''
+        [ $srcmode = playback ] && pbarg=" -p $Run"
+        echo screen -t doit $0 $pbarg $ncopt -sS $session screen
+      } >$rc
+      screen -c $rc
+      clear
+      rm $rc
+      exit 0
+    fi;;
+  pterm)
+    ### Start pterms for each disp screen and clt
+    pterm -t radlab -m 19x35 -g 19x35 -U /usr/local/sbin/getcon scr1 $session &
+    pterm -t clt -m 2x80 -g 2x80 -y 90% -x 0 -U /usr/local/sbin/getcon clt $session &
+    ;;
+  *)
+esac
+    
+pterm_pid=''
+if [ -r $logfile -a $dispmode != screen ]; then
+  pterm -t $logfileroot$logfilesuffix less +F $logfile &
+  pterm_pid=$!
+fi
+if [ -r $logfile -a $dispmode = screen ]; then
+  # pterm_pid=`pidin -P less arg | grep -F "less +F $logfile" | head -n1`
+  # pterm_pid=${pterm_pid% less +F $logfile}
+  pterm_pid=`cat less.pid.$session`
+  rm -f less.pid.$session
+fi
+
+# Now we want the display and client programs to
+# talk to a local memo to avoid cluttering up
+# the flight log
+memo=/dev/huarp/$Experiment/memo
+if [ ! -e $memo ]; then
+  Launch memo memo -o $logfileroot.clt.log
+fi
+
+# Now collect display consoles for each disp screen and clt
+for screen in scr1 clt; do
+  term=''
+  if [ $dispmode != photon ]; then
+    waitfor pty.$screen.$session || nl_error pty.$screen.$session did not appear
+    term=`cat pty.$screen.$session`
+    rm pty.$screen.$session
+  fi
+  eval ${screen}_term=$term
+done
+
+Launch - radlabdisp$nc $ncopt -t $FlightNode $scr1_term
+if [ $srcmode = realtime ]; then
+  radlabclt$nc -C $FlightNode $clt_term $scr1_term
+else
+  playbackclt$nc $clt_term $scr1_term
+fi
+
+# This is where we run. When the client quits,
+# we are done and need to clean up
+
+[ $dispmode != photon -a -e $cmdsrvr ] &&
+  echo "getcon end session $session" >$cmdsrvr
+
+# Leave the log up for a few seconds to view shutdown status
+if [ -n "$pterm_pid" ]; then
+  sleep 2
+  kill $pterm_pid
+  # wait a bit so parent needn't report the termination
+  sleep 1
+  echo "doit: Invoking parent for cleanup"
+  exec parent -qt1
+else
+  echo "doit: Invoking parent for cleanup"
+  exec parent -qt3
+fi

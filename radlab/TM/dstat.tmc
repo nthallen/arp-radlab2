@@ -1,0 +1,8 @@
+%{
+  #define StBit_text(x) ((x)?"On ":"Off")
+%}
+TM typedef unsigned char StBit {
+  text "%3d" StBit_text();
+}
+
+StBit LaserS; Invalidate LaserS; { LaserS = (DS80A>>6)&1; Validate LaserS; }

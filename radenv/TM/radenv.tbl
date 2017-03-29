@@ -25,21 +25,17 @@ Flipper {
   FlipState: (FlipState,5);
 }
 Chamber {
-  HBox { Title: -; Chamber; - };
-  P: (ChamberP,15) Torr;
+  HBox { Title: -; Pressure; - };
+  ChamberP: (ChamberP,15) Torr;
+  InstP: (InstP,6) Torr;
 }
 SW {
   +-+;
-  SWStat: (SWStat,5);
+# SWStat: (SWStat,5);
   Time: (flttime,8);
   MFCtr: (MFCtr,5);
 }
-{ [Agilent];
+{
   [Chamber];
-  HBox {
-    [bmxs]; |+; {
-      [Flipper];
-      [SW];
-    }
-  }
+  [SW]
 }

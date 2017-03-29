@@ -1,6 +1,4 @@
 %{
   #include "agilent.h"
   agilent_t Agilent;
-  #include "BMXS.h"
-  BMXS_t BMXS;
 %}

@@ -13,6 +13,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
   Launch DG/cmd     radenvcol
   Launch cmd/server radenvsrvr
   Launch -          lgr -N `mlf_find LOG`
-  Launch -          agilentDriver
-  Launch -          bmxsd
+# Launch -          agilentDriver
   Launch -          radenvalgo -v

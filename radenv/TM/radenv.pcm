@@ -1,0 +1,22 @@
+
+--------Frame Statistics-----------
+Major Frame: 1 minor frames, 1 Hz
+Minor Frame: 8 bytes, 1 Hz
+Effective Frame Dimensions:
+  1 Rows 8 Columns
+  1 rows/sec
+  64 bits/sec
+  Data:  32 bits/sec  50 %
+  Synch: 32 bits/sec  50 %
+  Empty: 0 bits/sec  0 %
+-------End of Frame Statistics-----
+
+
+--------PCM Definition-------------
+1/1 Hz 2 bytes Datum MFCtr (1,0,0,2)
+1/1 Hz 4 bytes Group Herc_AD_Group (1,0,2,4)
+1/1 Hz 2 bytes Member InstP (1,0,2,2)
+1/1 Hz 2 bytes Member ChamberP (1,0,4,2)
+1/1 Hz 2 bytes Datum Synch (1,0,6,2)
+-------End of PCM Definition-------
+

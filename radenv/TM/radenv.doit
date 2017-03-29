@@ -1,5 +1,6 @@
 batchfile interact
-display radenvdisp -C $FlightNode
+#display radenvdisp -C $FlightNode
+display radenvdisp
 client radenvclt
 memo
-phrtg
+# phrtg

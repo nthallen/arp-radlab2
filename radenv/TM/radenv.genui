@@ -1,0 +1,5 @@
+HEADER radenv Instrument
+MNEMONIC radenv
+HOMEDIR RADENV_DATA_DIR
+1 InstP Chamber P
+1 ChamberP Chamber P

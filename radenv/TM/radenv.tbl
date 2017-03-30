@@ -25,9 +25,13 @@ Flipper {
   FlipState: (FlipState,5);
 }
 Chamber {
-  HBox { Title: -; Pressure; - };
+  HBox { Title: -; Chamber; - };
   ChamberP: (ChamberP,15) Torr;
+  ChambP:   (ChambP,6) Torr;
+  Inst1T:   (Inst1T,6) C;
+  HBox { Title: -; Instrument; - };
   InstP: (InstP,6) Torr;
+  Inst2T:   (Inst2T,6) C;
 }
 SW {
   +-+;

@@ -1,4 +1,4 @@
-tmcbase = base.tmc herc_ad.tmc
+tmcbase = base.tmc herc_ad.tmc Herc_T30K.tmc
 cmdbase = /usr/local/share/huarp/root.cmd
 cmdbase = /usr/local/share/huarp/phrtg.cmd
 cmdbase = radenv.cmd

@@ -8,6 +8,7 @@
 
 TM typedef signed short HERC_AD;
 TM typedef double TORR { text "%15.8le" agilent_text(); }
+TM typedef double CELCIUS { text "%6.2lf"; }
 TM typedef double VOLTS;
 
 TM typedef HERC_AD IONIVAC_ITR90 {
@@ -35,12 +36,19 @@ Calibration (InstP_t, TORR) {
   32768, 1000
 }
 
+TM typedef HERC_AD Herc_T30K { convert CELCIUS; text "%6.2lf"; }
+
 TM 1 Hz IONIVAC_ITR90 ChamberP; Address ChamberP 0; /* Chamber Pressure  */
 TM 1 Hz InstP_t InstP; Address InstP 1; /* Instrument Pressure */
+TM 1 Hz InstP_t ChambP; Address ChambP 5; /* another chamber pressure */
+TM 1 Hz Herc_T30K Inst1T; Address Inst1T 2;
+TM 1 Hz Herc_T30K Inst2T; Address Inst2T 4;
+
 
 Group Herc_AD_Group ( ChamberP, InstP ) {
   unsigned short cvals[32];
   read_herc_ad( cvals );
   ChamberP = cvals[ChamberP.address];
   InstP = cvals[InstP.address];
+  ChambP = cvals[ChambP.address];
 }

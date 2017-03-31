@@ -1,8 +1,8 @@
 HEADER radenv Instrument
 MNEMONIC radenv
 HOMEDIR RADENV_DATA_DIR
-1 InstP Instrument P
-1 Inst2T Instrument T
+1 InstP Chamber P
+1 Inst2T Chamber T
 1 ChamberP Chamber P
 1 ChambP   Chamber P
 1 Inst1T Chamber T

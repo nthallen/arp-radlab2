@@ -21,8 +21,8 @@ static unsigned short Gain_Code[32] = {
   RANGE_PM_5,  /*  2 30K Therm 75K PU to 5V */
   RANGE_PM_10, /*  3 unused */
   RANGE_PM_5,  /*  4 30K Therm 75K PU to 5V */
-  RANGE_PM_5,  /*  5 0-5V 0-1000 Torr */
-  RANGE_PM_10, /*  6 unused */
+  RANGE_PM_10, /*  5 unused */
+  RANGE_PM_5,  /*  6 0-5V 0-1000 Torr */
   RANGE_PM_10, /*  7 unused */
   RANGE_PM_10, /*  8 unused */
   RANGE_PM_10, /*  9 unused */

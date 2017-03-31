@@ -5,6 +5,7 @@ f = ne_dialg(f, 'add', 1, 0, 'pradenvip', 'P' );
 f = ne_dialg(f, 'add', 1, 0, 'pradenvit', 'T' );
 f = ne_dialg(f, 'add', 0, 1, 'gradenvc', 'Chamber' );
 f = ne_dialg(f, 'add', 1, 0, 'pradenvcp', 'P' );
+f = ne_dialg(f, 'add', 1, 0, 'pradenvct', 'T' );
 f = ne_listdirs(f, 'RADENV_DATA_DIR', 15);
 f = ne_dialg(f, 'newcol');
 ne_dialg(f, 'resize');

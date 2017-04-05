@@ -1,3 +1,5 @@
+Input "TMbase.tbl";
+
 Agilent {
   HBox { Title: -; Agilent; - };
   QCLAT: (QCLAT,15) Ohms;
@@ -33,13 +35,7 @@ Chamber {
   InstP: (InstP,6) Torr;
   Inst2T:   (Inst2T,6) C;
 }
-SW {
-  +-+;
-# SWStat: (SWStat,5);
-  Time: (flttime,8);
-  MFCtr: (MFCtr,5);
-}
 {
   [Chamber];
-  [SW]
+  [TMbaseB]
 }

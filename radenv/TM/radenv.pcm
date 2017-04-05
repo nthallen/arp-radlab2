@@ -1,13 +1,13 @@
 
 --------Frame Statistics-----------
 Major Frame: 1 minor frames, 1 Hz
-Minor Frame: 14 bytes, 1 Hz
+Minor Frame: 23 bytes, 1 Hz
 Effective Frame Dimensions:
-  1 Rows 14 Columns
+  1 Rows 23 Columns
   1 rows/sec
-  112 bits/sec
-  Data:  80 bits/sec  71 %
-  Synch: 32 bits/sec  29 %
+  184 bits/sec
+  Data:  152 bits/sec  83 %
+  Synch: 32 bits/sec  17 %
   Empty: 0 bits/sec  0 %
 -------End of Frame Statistics-----
 
@@ -17,9 +17,13 @@ Effective Frame Dimensions:
 1/1 Hz 4 bytes Group Herc_AD_Group (1,0,2,4)
 1/1 Hz 2 bytes Member InstP (1,0,2,2)
 1/1 Hz 2 bytes Member ChamberP (1,0,4,2)
-1/1 Hz 2 bytes Datum ChambP (1,0,6,2)
-1/1 Hz 2 bytes Datum Inst1T (1,0,8,2)
-1/1 Hz 2 bytes Datum Inst2T (1,0,10,2)
-1/1 Hz 2 bytes Datum Synch (1,0,12,2)
+1/1 Hz 4 bytes Datum SysTDrift (1,0,6,4)
+1/1 Hz 2 bytes Datum ChambP (1,0,10,2)
+1/1 Hz 2 bytes Datum Disk (1,0,12,2)
+1/1 Hz 2 bytes Datum freemem (1,0,14,2)
+1/1 Hz 2 bytes Datum Inst1T (1,0,16,2)
+1/1 Hz 2 bytes Datum Inst2T (1,0,18,2)
+1/1 Hz 1 bytes Datum CPU_Pct (1,0,20,1)
+1/1 Hz 2 bytes Datum Synch (1,0,21,2)
 -------End of PCM Definition-------
 

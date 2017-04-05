@@ -5,6 +5,8 @@ cmdbase = radenv.cmd
 cmdbase = bmxs.cmd
 genuibase = radenv.genui
 
+Module TMbase
+
 TGTDIR = $(TGTNODE)/home/radenv
 IDISTRIB = Experiment.config VERSION
 # DISTRIB = ../Agilent/agilentDriver
@@ -13,6 +15,6 @@ IGNORE = Makefile
 
 radenvcol : iopriv.oui herc_ad.c herc_ad.oui
 radenvsrvr : herc_dio.cc herc_dio.oui iopriv.oui
-radenvdisp : /usr/local/share/huarp/flttime.tmc radenv.tbl /usr/local/share/oui/cic.oui
+radenvdisp : radenv.tbl /usr/local/share/oui/cic.oui
 radenvalgo : radenv.tma
 doit : radenv.doit

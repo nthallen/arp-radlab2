@@ -1,0 +1,16 @@
+# Startup script for agilent
+
+  Launch memo memo -o $Experiment.log
+  Launch TM/DCo TMbfr
+  memo=/dev/huarp/$Experiment/memo
+  echo "Running script interact" >$memo
+
+  Launch - lgr -N `mlf_find LOG`
+  Launch DG/cmd agilentcol
+  Launch cmd/server agilentsrvr
+# stty baud=9600 -ihflow -ohflow </dev/ser2
+# Launch - hartd -p /dev/ser2
+# Launch - specq -H 10.245.83.12
+  Launch - agilentDriver
+  Launch - agilentalgo -v
+

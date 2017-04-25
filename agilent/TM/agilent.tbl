@@ -1,0 +1,18 @@
+Input "TMbase.tbl";
+
+agilent {
+  RefT: (RefT,8) C;
+  Ref:  (Ref,15) Ohms;
+  T1:   (T1,15)  Ohms;
+  T2:   (T2,15)  Ohms;
+  T3:   (T3,15)  Ohms;
+  T4:   (T4,15)  Ohms;
+  T5:   (T5,15)  Ohms;
+  T6:   (T6,15)  Ohms;
+  T7:   (T7,15)  Ohms;
+  Stale: (AgStale,3);
+}
+
+{ [agilent];
+  [TMbaseB]
+}

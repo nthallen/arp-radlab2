@@ -1,0 +1,15 @@
+HEADER Agilent
+MNEMONIC Ag
+HOMEDIR Agilent_Data_Dir
+ROWS 20
+
+  1/10 Ref Agilent Ohms
+  1/10 T1  Agilent Ohms10K
+  1/10 T2  Agilent Ohms10K
+  1/10 T3  Agilent Ohms10K
+  1/10 T4  Agilent Ohms10K
+  1/10 T5  Agilent Ohms10K
+  1/10 T6  Agilent Ohms10K
+  1/10 T7  Agilent Ohms10K
+  1/10 RefT Agilent Temp
+  1/10 AgStale Agilent Stale

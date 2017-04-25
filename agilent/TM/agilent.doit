@@ -1,0 +1,5 @@
+display agilentdisp -C $FlightNode
+client agilentclt
+memo
+batchfile interact
+phrtg

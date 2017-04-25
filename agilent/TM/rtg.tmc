@@ -1,0 +1,9 @@
+ci_sendfcmd(2, "PhRTG Datum Ref %lu %s\n", itime(), text(Ref));
+ci_sendfcmd(2, "PhRTG Datum T1 %lu %s\n", itime(), text(T1));
+ci_sendfcmd(2, "PhRTG Datum T2 %lu %s\n", itime(), text(T2));
+ci_sendfcmd(2, "PhRTG Datum T3 %lu %s\n", itime(), text(T3));
+ci_sendfcmd(2, "PhRTG Datum T4 %lu %s\n", itime(), text(T4));
+ci_sendfcmd(2, "PhRTG Datum T5 %lu %s\n", itime(), text(T5));
+ci_sendfcmd(2, "PhRTG Datum T6 %lu %s\n", itime(), text(T6));
+ci_sendfcmd(2, "PhRTG Datum T7 %lu %s\n", itime(), text(T7));
+

@@ -1,0 +1,5 @@
+TM typedef double CELCIUS { text "%8.4lf"; }
+
+CELCIUS RefT; invalidate RefT;
+{ RefT = Ref * 0.; validate RefT; }
+

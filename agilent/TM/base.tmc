@@ -1,0 +1,60 @@
+%{
+  #include "agilent.h"
+  #include <sstream>
+  #include <iomanip>
+
+  class agostream {
+    public:
+      agostream();
+      const char *str(double val);
+      static agostream agos;
+    private:
+      std::ostringstream os;
+  };
+  agostream::agostream() {
+    os << std::showpos << std::scientific << std::uppercase
+      << std::setprecision(8);
+  }
+  const char *agostream::str(double val) {
+    os.str("");
+    os << val;
+    return os.str().c_str();
+  }
+  agostream agostream::agos;
+
+  const char *agilent_text(double val) {
+    return agostream::agos.str(val);
+  }
+%}
+TM typedef double Agilent_t { text "%+15.8le" agilent_text(); }
+TM typedef Agilent_t RESISTANCE;
+TM typedef Agilent_t VOLTAGE;
+TM typedef unsigned short UINT { text "%5u"; }
+TM typedef unsigned char UCHAR { text "%3u"; }
+
+TM 1/10 Hz RESISTANCE Ref;
+TM 1/10 Hz RESISTANCE T1;
+TM 1/10 Hz RESISTANCE T2;
+TM 1/10 Hz RESISTANCE T3;
+TM 1/10 Hz RESISTANCE T4;
+TM 1/10 Hz RESISTANCE T5;
+TM 1/10 Hz RESISTANCE T6;
+TM 1/10 Hz RESISTANCE T7;
+TM 1/10 Hz UCHAR AgStale;
+
+TM "Receive" Agilent 1;
+
+Group Agilent_Group (Ref, T1, T2, T3, T4, T5, T6, T7, AgStale) {
+  Ref = Agilent.data[0];
+  T1 = Agilent.data[1];
+  T2 = Agilent.data[2];
+  T3 = Agilent.data[3];
+  T4 = Agilent.data[4];
+  T5 = Agilent.data[5];
+  T6 = Agilent.data[6];
+  T7 = Agilent.data[7];
+  AgStale = Agilent_obj->stale(255);
+  Agilent_obj->synch();
+}
+
+TM 1 Hz UINT Synch, MFCtr;

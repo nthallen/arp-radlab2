@@ -1,0 +1,4 @@
+%{
+  #include "agilent.h"
+  agilent_t Agilent;
+%}

@@ -1,0 +1,33 @@
+
+--------Frame Statistics-----------
+Major Frame: 10 minor frames, 1/10 Hz
+Minor Frame: 20 bytes, 1 Hz
+Effective Frame Dimensions:
+  10 Rows 20 Columns
+  1 rows/sec
+  160 bits/sec
+  Data:  124 bits/sec  78 %
+  Synch: 32 bits/sec  20 %
+  Empty: 4 bits/sec  3 %
+-------End of Frame Statistics-----
+
+
+--------PCM Definition-------------
+1/1 Hz 2 bytes Datum MFCtr (1,0,0,2)
+1/1 Hz 4 bytes Datum SysTDrift (1,0,2,4)
+1/1 Hz 2 bytes Datum Disk (1,0,6,2)
+1/1 Hz 2 bytes Datum freemem (1,0,8,2)
+1/1 Hz 1 bytes Datum CPU_Pct (1,0,10,1)
+1/1 Hz 2 bytes Datum Synch (1,0,18,2)
+1/10 Hz 65 bytes Group Agilent_Group (10,0,11,7) (10,1,11,7) (10,2,11,7) (10,3,11,7) (10,4,11,7) (10,5,11,7) (10,6,11,7) (10,7,11,7) (10,8,11,7) (10,9,11,2)
+1/10 Hz 1 bytes Member AgStale (10,0,11,1)
+1/10 Hz 8 bytes Member T7 (10,0,12,6) (10,1,11,2)
+1/10 Hz 8 bytes Member T6 (10,1,13,5) (10,2,11,3)
+1/10 Hz 8 bytes Member T5 (10,2,14,4) (10,3,11,4)
+1/10 Hz 8 bytes Member T4 (10,3,15,3) (10,4,11,5)
+1/10 Hz 8 bytes Member T3 (10,4,16,2) (10,5,11,6)
+1/10 Hz 8 bytes Member T2 (10,5,17,1) (10,6,11,7)
+1/10 Hz 8 bytes Member T1 (10,7,11,7) (10,8,11,1)
+1/10 Hz 8 bytes Member Ref (10,8,12,6) (10,9,11,2)
+-------End of PCM Definition-------
+

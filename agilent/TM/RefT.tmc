@@ -1,5 +1,15 @@
+%{
+  #include <math.h>
+  static double steinhart(double R, double a, double b, double c) {
+    double lnR = log(R);
+    return 1.0/(a + b*lnR + c*lnR*lnR*lnR);
+  }
+%}
+
 TM typedef double CELCIUS { text "%8.4lf"; }
 
 CELCIUS RefT; invalidate RefT;
-{ RefT = Ref * 0.; validate RefT; }
+{ RefT = steinhart(Ref, 9.376e-4, 2.208e-4, 1.276e-7) - 273.15;
+  validate RefT;
+}
 

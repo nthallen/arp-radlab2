@@ -32,7 +32,7 @@ TM typedef Agilent_t VOLTAGE;
 TM typedef unsigned short UINT { text "%5u"; }
 TM typedef unsigned char UCHAR { text "%3u"; }
 
-TM 1/10 Hz RESISTANCE Ref;
+TM 1/10 Hz RESISTANCE T0;
 TM 1/10 Hz RESISTANCE T1;
 TM 1/10 Hz RESISTANCE T2;
 TM 1/10 Hz RESISTANCE T3;
@@ -40,12 +40,25 @@ TM 1/10 Hz RESISTANCE T4;
 TM 1/10 Hz RESISTANCE T5;
 TM 1/10 Hz RESISTANCE T6;
 TM 1/10 Hz RESISTANCE T7;
+TM 1/10 Hz RESISTANCE T8;
+TM 1/10 Hz RESISTANCE T9;
+TM 1/10 Hz RESISTANCE T10;
+TM 1/10 Hz RESISTANCE T11;
+TM 1/10 Hz RESISTANCE T12;
+TM 1/10 Hz RESISTANCE T13;
+TM 1/10 Hz RESISTANCE T14;
+TM 1/10 Hz RESISTANCE T15;
+TM 1/10 Hz RESISTANCE T16;
+TM 1/10 Hz RESISTANCE T17;
+TM 1/10 Hz UCHAR count;
 TM 1/10 Hz UCHAR AgStale;
 
 TM "Receive" Agilent 1;
 
-Group Agilent_Group (Ref, T1, T2, T3, T4, T5, T6, T7, AgStale) {
-  Ref = Agilent.data[0];
+Group Agilent_Group (T0, T1, T2, T3, T4, T5, T6, T7, T8, T9,
+                T10, T11, T12, T13, T14, T15, T16, T17,
+                count, AgST1ale) {
+  T0 = Agilent.data[0];
   T1 = Agilent.data[1];
   T2 = Agilent.data[2];
   T3 = Agilent.data[3];
@@ -53,6 +66,17 @@ Group Agilent_Group (Ref, T1, T2, T3, T4, T5, T6, T7, AgStale) {
   T5 = Agilent.data[5];
   T6 = Agilent.data[6];
   T7 = Agilent.data[7];
+  T8 = Agilent.data[8];
+  T9 = Agilent.data[9];
+  T10 = Agilent.data[10];
+  T11 = Agilent.data[11];
+  T12 = Agilent.data[12];
+  T13 = Agilent.data[13];
+  T14 = Agilent.data[14];
+  T15 = Agilent.data[15];
+  T16 = Agilent.data[16];
+  T17 = Agilent.data[17];
+  count = AgilentT1.count;
   AgStale = Agilent_obj->stale(255);
   Agilent_obj->synch();
 }

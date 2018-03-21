@@ -1,7 +1,7 @@
 TGTDIR = $(TGTNODE)/home/agilent
 
 tmcbase = base.tmc
-tmcbase = RefT.tmc
+# tmcbase = RefT.tmc
 colbase = agilentcol.tmc
 
 cmdbase = /usr/local/share/huarp/phrtg.cmd

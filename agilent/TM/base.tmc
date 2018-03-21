@@ -57,7 +57,7 @@ TM "Receive" Agilent 1;
 
 Group Agilent_Group (T0, T1, T2, T3, T4, T5, T6, T7, T8, T9,
                 T10, T11, T12, T13, T14, T15, T16, T17,
-                count, AgST1ale) {
+                count, AgStale) {
   T0 = Agilent.data[0];
   T1 = Agilent.data[1];
   T2 = Agilent.data[2];
@@ -76,7 +76,7 @@ Group Agilent_Group (T0, T1, T2, T3, T4, T5, T6, T7, T8, T9,
   T15 = Agilent.data[15];
   T16 = Agilent.data[16];
   T17 = Agilent.data[17];
-  count = AgilentT1.count;
+  count = Agilent.count;
   AgStale = Agilent_obj->stale(255);
   Agilent_obj->synch();
 }

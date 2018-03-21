@@ -2,8 +2,7 @@ function ui_Ag
 f = ne_dialg('Agilent',1);
 f = ne_dialg(f, 'add', 0, 1, 'gAga', 'Agilent' );
 f = ne_dialg(f, 'add', 1, 0, 'pAgao', 'Ohms' );
-f = ne_dialg(f, 'add', 1, 0, 'pAgaok', 'Ohms 10K' );
-f = ne_dialg(f, 'add', 1, 0, 'pAgat', 'Temp' );
+f = ne_dialg(f, 'add', 1, 0, 'pAgacount', 'count' );
 f = ne_dialg(f, 'add', 1, 0, 'pAgas', 'Stale' );
 f = ne_dialg(f, 'add', 0, 1, 'gAgtm', 'T Mbase' );
 f = ne_dialg(f, 'add', 1, 0, 'pAgtmtd', 'T Drift' );

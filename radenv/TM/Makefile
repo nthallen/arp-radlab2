@@ -1,15 +1,18 @@
-# Makefile Generated Wed Feb 01 10:47:18 EST 2012
+# Makefile Generated Wed Mar 21 13:08:16 EDT 2018
 MNC=radenv
-HOMEDIR=/home/radenv/src/TM
 SPECFILE=radenv.spec
+PCMFILE=radenv.pcm
 SRC=base.tmc herc_ad.tmc iopriv.oui radenvcol.tmc swstat.tmc
-SRC+=herc_ad.c herc_ad.oui radenv.cmd swstat.cmd bmxs.cmd herc_dio.cc
-SRC+=herc_dio.oui dstat.tmc bmxsrtg.tmc radenv.tbl radenv.tma
-SRC+=radenv.edf radenv.doit
+SRC+=herc_ad.c herc_ad.oui /usr/local/share/huarp/root.cmd
+SRC+=/usr/local/share/huarp/phrtg.cmd radenv.cmd swstat.cmd bmxs.cmd
+SRC+=herc_dio.cc herc_dio.oui dstat.tmc
+SRC+=/usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenv.tbl
+SRC+=/usr/local/share/oui/cic.oui radenv.tma radenv.edf radenv.doit
+SRC+=radenv.pcm
 TOOL=radenv.spec Makefile
 SCRIPT=interact
-OBJ=radenvcol.cc radenv.pcm tm.dac radenvcoloui.c radenvcoloui.o
-OBJ+=herc_ad.o radenvcol.o radenvcmd.cc radenvcmd.dat radenvsrvr.o
+OBJ=radenvcol.cc tm.dac radenvcoloui.c radenvcoloui.o herc_ad.o
+OBJ+=radenvcol.o radenvcmd.cc radenvcmd.dat radenvsrvr.o
 OBJ+=radenvsrvroui.c radenvsrvroui.o herc_dio.o radenvtbl.tmc
 OBJ+=radenvdisp.cc radenvdispoui.c radenvdispoui.o radenvdisp.o
 OBJ+=radenvtblnc.tmc radenvdispnc.cc radenvdispncoui.c
@@ -18,36 +21,59 @@ OBJ+=radenvalgooui.c radenvalgooui.o radenvalgo.o radenvextedf.oui
 OBJ+=radenvext.tmc radenvext.cc radenvextoui.c radenvextoui.o
 OBJ+=radenvext.o doit.dep radenvclt.o radenvcltoui.c radenvcltoui.o
 OBJ+=radenvcltnc.o radenvcltncoui.c radenvcltncoui.o
+OBJ+=radenvtbl.tmc.dep radenvtblnc.tmc.dep
 TGT=radenvcol radenvsrvr radenvdisp radenvdispnc radenvalgo
 TGT+=radenvext doit radenvclt radenvcltnc
+IGNORE=
 DISTRIB=../Agilent/agilentDriver radenv.pcm tm.dac
 IDISTRIB=Experiment.config VERSION doit
 SRCDIST=radenv.tbl radenv.tma base.tmc herc_ad.tmc
-NONRCS=
 TMCBASE=base.tmc herc_ad.tmc
 CMDBASE=/usr/local/share/huarp/root.cmd
 CMDBASE+=/usr/local/share/huarp/phrtg.cmd radenv.cmd swstat.cmd
 CMDBASE+=bmxs.cmd
-RCS=$(SRC) $(TOOL) $(SCRIPT)
-SOURCE=$(RCS) $(NONRCS)
+COLBASE=
+SWSBASE=
+QCLIBASE=
+GENUIBASE=
+EXTBASE=
+SPECDEPBASE=
+SPECTGTBASE=
+SPECTGTMISS:=$(foreach file,$(SPECTGTBASE),$(if $(wildcard $(file)),,$(file)))
+AG_CPPFLAGS=
+PHTGT=radenvtbl.tmc
+SOURCE=$(SRC) $(TOOL) $(SCRIPT)
 OBJECT=$(OBJ) *.err
 TARGET=$(TGT)
 DSTRB=$(TGT) $(DISTRIB) $(SCRIPT)
 TGTDIR= $(TGTNODE)/home/radenv
 include /usr/local/share/huarp/appgen.mk
 
-all : Makefile $(TGT)
-Makefile : radenv.spec
+.PHONY : all all-dist extdistribution distribution clean clean-dist check_photon
+
+IGNOREFILE=.gitignore
+all : check_photon $(TGT) $(IGNOREFILE)
+all-dist : all $(DSTRB) $(SRCDIST) VERSION
+Makefile $(SPECTGTMISS) : radenv.spec $(SPECDEPBASE)
 	appgen radenv.spec
 VERSION=`cat VERSION`
-extdistribution : $(DSTRB) $(SRCDIST)
+extdistribution : all-dist
 	@[ -d $(TGTDIR)/bin ] || mkdir $(TGTDIR)/bin
 	@[ -d $(TGTDIR)/bin/$(VERSION) ] || mkdir $(TGTDIR)/bin/$(VERSION)
-	@[ -d  $(TGTDIR)/bin/$(VERSION)/Base ] || mkdir $(TGTDIR)/bin/$(VERSION)/Base
+	@[ -d $(TGTDIR)/bin/$(VERSION)/Base ] || mkdir $(TGTDIR)/bin/$(VERSION)/Base
+	@[ ! -f $(TGTDIR)/bin/$(VERSION)/$(PCMFILE) ] || \
+	  cmp -s $(TGTDIR)/bin/$(VERSION)/$(PCMFILE) $(PCMFILE) || \
+	  ( echo "$(PCMFILE) changed without VERSION update"; false )
 	@distribute $(FORCE) $(TGTDIR)/bin/$(VERSION) $(DSTRB)
 	@distribute $(FORCE) $(TGTDIR)/bin/$(VERSION)/Base $(SRCDIST)
 distribution : extdistribution
 	@distribute $(FORCE) $(TGTDIR) $(IDISTRIB)
+check_photon :
+ifeq ($(WPHOTON),YES)
+	@for tgt in $(PHTGT); do \
+	  cmp -s $$tgt /usr/local/share/huarp/nulltbl.tmc && echo Remaking $$tgt && rm -f $$tgt; \
+	done; true
+endif
 radenvcol : radenvcol.o radenvcoloui.o herc_ad.o
 	$(LINK.privCXX) radenvcol.o radenvcoloui.o herc_ad.o -ltmpp -ltm -lnort
 	$(OUIUSE) radenvcoloui.c
@@ -76,7 +102,7 @@ radenvclt : radenvclt.o radenvcltoui.o
 radenvcltnc : radenvcltnc.o radenvcltncoui.o
 	$(LINK.normCXX) radenvcltnc.o radenvcltncoui.o -ltmnc -lncurses -ltmpp -ltm -lnort
 	$(OUIUSE) radenvcltncoui.c
-radenvcol.cc : base.tmc herc_ad.tmc radenvcol.tmc swstat.tmc
+radenvcol.cc : base.tmc herc_ad.tmc radenvcol.tmc swstat.tmc VERSION
 	$(TMC.col) base.tmc herc_ad.tmc radenvcol.tmc swstat.tmc
 radenvcoloui.c : iopriv.oui herc_ad.oui $(OUIDIR)/collect.oui $(OUIDIR)/seteuid.oui $(OUIDIR)/msg.oui
 	$(OUI) iopriv.oui herc_ad.oui $(OUIDIR)/collect.oui $(OUIDIR)/seteuid.oui $(OUIDIR)/msg.oui
@@ -92,16 +118,16 @@ radenvsrvroui.c : herc_dio.oui iopriv.oui $(OUIDIR)/cis.oui $(OUIDIR)/seteuid.ou
 radenvsrvroui.o : radenvsrvroui.c
 herc_dio.o : herc_dio.cc
 radenvtbl.tmc : radenv.tbl
-	$(TABLE) radenv.tbl
-radenvdisp.cc : base.tmc herc_ad.tmc dstat.tmc /usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenvtbl.tmc
+-include radenvtbl.tmc.dep
+radenvdisp.cc : base.tmc herc_ad.tmc dstat.tmc /usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenvtbl.tmc VERSION
 	$(TMC) base.tmc herc_ad.tmc dstat.tmc /usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenvtbl.tmc
 radenvdispoui.c : /usr/local/share/oui/cic.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
 	$(OUI) /usr/local/share/oui/cic.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
 radenvdispoui.o : radenvdispoui.c
 radenvdisp.o : radenvdisp.cc
 radenvtblnc.tmc : radenv.tbl
-	$(NCTABLE) radenv.tbl
-radenvdispnc.cc : base.tmc herc_ad.tmc dstat.tmc /usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenvtblnc.tmc
+-include radenvtblnc.tmc.dep
+radenvdispnc.cc : base.tmc herc_ad.tmc dstat.tmc /usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenvtblnc.tmc VERSION
 	$(TMC) base.tmc herc_ad.tmc dstat.tmc /usr/local/share/huarp/flttime.tmc bmxsrtg.tmc radenvtblnc.tmc
 radenvdispncoui.c : /usr/local/share/oui/cic.oui $(OUIDIR)/nctable.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
 	$(OUI) /usr/local/share/oui/cic.oui $(OUIDIR)/nctable.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
@@ -110,7 +136,7 @@ radenvdispnc.o : radenvdispnc.cc
 radenvalgoa.tmc : radenv.tma radenvsrvr
 	$(SERVER) ./radenvsrvr
 	$(TMCALGO) -V "`./radenvsrvr -R`" radenv.tma
-radenvalgo.cc : base.tmc herc_ad.tmc radenvalgoa.tmc
+radenvalgo.cc : base.tmc herc_ad.tmc radenvalgoa.tmc VERSION
 	$(TMC) base.tmc herc_ad.tmc radenvalgoa.tmc
 radenvalgooui.c : $(OUIDIR)/tma.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
 	$(OUI) $(OUIDIR)/tma.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
@@ -120,7 +146,7 @@ radenvextedf.oui : radenv.edf
 	$(EDF2OUI) radenv.edf
 radenvext.tmc : radenv.edf
 	$(EDF2EXT) radenv.edf
-radenvext.cc : base.tmc herc_ad.tmc radenvext.tmc
+radenvext.cc : base.tmc herc_ad.tmc radenvext.tmc VERSION
 	$(TMC) base.tmc herc_ad.tmc radenvext.tmc
 radenvextoui.c : radenvextedf.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
 	$(OUI) radenvextedf.oui $(OUIDIR)/dc.oui $(OUIDIR)/msg.oui
@@ -144,5 +170,6 @@ tidy :
 	rm -f $(OBJECT)
 clean : tidy
 	rm -f $(TARGET)
-.cvsignore :
-	@for i in Makefile '.B4*' $(OBJECT) $(TARGET); do echo "$$i"; done >.cvsignore
+clean-dist : clean
+$(IGNOREFILE) : Makefile
+	@for i in $(OBJECT) $(IGNORE) $(TARGET); do echo "$$i"; done >$(IGNOREFILE)

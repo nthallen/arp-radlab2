@@ -1,8 +1,8 @@
 radenvcol.cc
-radenv.pcm
 tm.dac
 radenvcoloui.c
 radenvcoloui.o
+herc_ad.o
 radenvcol.o
 radenvcmd.cc
 radenvcmd.dat
@@ -38,6 +38,8 @@ radenvcltoui.o
 radenvcltnc.o
 radenvcltncoui.c
 radenvcltncoui.o
+radenvtbl.tmc.dep
+radenvtblnc.tmc.dep
 *.err
 radenvcol
 radenvsrvr

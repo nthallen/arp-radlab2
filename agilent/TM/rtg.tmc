@@ -1,5 +1,5 @@
 ci_sendfcmd(2, "PhRTG Datum Tref %lu %s\n", itime(), text(RefT));
 ci_sendfcmd(2, "PhRTG Datum Rref %lu %s\n", itime(), text(Ref));
-ci_sendfcmd(2, "PhRTG Datum Rtherm %lu %s %s %s %s %s %s %s\n",
-  itime(), text(T1), text(T2), text(T3), text(T4), text(T5),
-  text(T6), text(T7));
+ci_sendfcmd(2, "PhRTG Datum Rtherm %lu %.0lf %.0lf %.0lf %.0lf %.0lf %.0lf %.0lf\n",
+  itime(), convert(T1), convert(T2), convert(T3), convert(T4), convert(T5),
+  convert(T6), convert(T7));
